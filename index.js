@@ -170,6 +170,8 @@ async (req, res) => {
                         res.send({"success": true, "token": token})
                     }
                 );
+            } else {
+                res.send({"success": false, "message": "Invalid credentials"})
             }
         })
         } else {
