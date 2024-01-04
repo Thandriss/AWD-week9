@@ -69,16 +69,6 @@ async function initializeCodeS() {
                 body.appendChild(nameToDo);
             }
         }
-    } else {
-        body.innerHTML = "";
-        var loginLink = document.createElement("a");
-        loginLink.href = "/login.html";
-        loginLink.innerText = "Login";
-        var registrationLink = document.createElement("a");
-        registrationLink.href = "/registration.html";
-        registrationLink.innerHTML = "Register";
-        body.appendChild(loginLink);
-        body.appendChild(registrationLink);
     }
 }
 
