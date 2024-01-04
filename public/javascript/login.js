@@ -14,6 +14,7 @@ function initializeCodeLogin() {
     loginButton.addEventListener("submit", logEvent);
 }
 
+
 async function logEvent(event) {
     event.preventDefault();
     console.log("fetch")
@@ -26,7 +27,13 @@ async function logEvent(event) {
     })
     .then(response => response.json())
     .then(data =>{
-        if(data.token) {
+        if (!data.success) {
+            let er = document.getElementById("error");
+            er.innerHTML = data.message;
+        }
+        else if(data.token) {
+            let er = document.getElementById("error");
+            er.innerHTML = "";
             console.log(data);
             storeToken(data.token);
             window.location.href ="/";

@@ -22,8 +22,6 @@ db.on("error", console.error.bind(console, "MongoDB connection error"));
 
 let saveToken = new Set();
 
-
-
 const app  = express()
 const port  = 3000
 app.use(express.static(path.join(__dirname, "public")));
@@ -51,7 +49,7 @@ async (req , res ) => {
     const errors = validationResult(req);
     console.log(errors)
     if(!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()}).send();
+        return res.status(400).send({errors: errors.array()});
     }  
     const {email, password} = req.body;
     Users.findOne({email: email})
@@ -70,7 +68,7 @@ async (req , res ) => {
                         email: email,
                         password: new_pass
                     }).save()
-                    res.send("ok")
+                    res.send({status: "ok"})
                 })
             })
         } else {
@@ -104,6 +102,19 @@ function isNotAuth(req, res, next) {
 
 app.get("/", (req, res) => {
     res.send("redirected")
+})
+
+app.get("/api/todos/list", (req, res) => {
+    const token = req.headers["cookie"].split('=')[1];
+    const data = jwt.verify(token, "AAABBBADA");
+    ToDos.findOne({user: data.id})
+    .then(async (user) => {
+        if(!user) {
+            res.send({ items: []})
+        } else {
+            res.send({ items: user.items})
+        }
+    })
 })
 
 
@@ -152,6 +163,7 @@ async (req, res) => {
                     jwtToken,
                     "AAABBBADA",
                     (err, token) => {
+                        if (err) return res.send({"success": false, "message": "Invalid credentials"})
                         res.cookie('connect.sid', token)
                         saveToken.add(token);
                         passport.authenticate('local')
@@ -160,6 +172,8 @@ async (req, res) => {
                 );
             }
         })
+        } else {
+            res.send({"success": false, "message": "Invalid credentials"})
         }
     })
 })
