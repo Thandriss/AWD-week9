@@ -47,7 +47,6 @@ body("password").matches('[a-z]').withMessage('Password Must Contain an Lowercas
 body("password").matches('[~`!@#$%^&*()-_+={}[]|\;:"<>,./?]'),
 async (req , res ) => {
     const errors = validationResult(req);
-    console.log(errors)
     if(!errors.isEmpty()) {
         return res.status(400).send({errors: errors.array()});
     }  
@@ -60,7 +59,6 @@ async (req , res ) => {
             await bcrypt
             .genSalt(10)
             .then(salt => {
-                console.log('Salt: ', salt)
                 bcrypt.hash(password, salt)
                 .then((result) => {
                     new_pass = result
@@ -69,6 +67,7 @@ async (req , res ) => {
                         password: new_pass
                     }).save()
                     res.send({status: "ok"})
+                    console.log("registered")
                 })
             })
         } else {
@@ -120,8 +119,6 @@ app.get("/api/todos/list", (req, res) => {
 
 app.post("/api/todos", isAuth, (req, res) => {
     const {items} = req.body;
-    console.log(items)
-    console.log(" in todos")
     const token = req.headers["cookie"].split('=')[1];
     const data = jwt.verify(token, "AAABBBADA");
     ToDos.findOne({user: data.id})
@@ -146,19 +143,16 @@ isNotAuth,
 body("email").trim().escape(),
 async (req, res) => {
     const {email, password} = req.body;
-    console.log("here")
     Users.findOne({email: email})
     .then ((user) => {
         if(user) {
             bcrypt.compare(password, user.password, (err, isMatch) => {
                 if(err) throw err
                 if(isMatch) {
-                    console.log("here")
                 let jwtToken = {
                     id: user._id,
                     email: user.email
                 }
-                console.log(jwtToken)
                 jwt.sign(
                     jwtToken,
                     "AAABBBADA",

@@ -10,7 +10,6 @@ if(document.readyState !== "loading") {
 
 function initializeCode() {
     const addTextButton = document.getElementById("login-form");
-    console.log("here")
     addTextButton.addEventListener("submit", regEvent);
 }
     
@@ -18,8 +17,6 @@ function initializeCode() {
 async function regEvent(event) {
     console.log("reg");
     event.preventDefault();
-    console.log(event.target[0].value)
-    console.log('{ "email": "' + event.target[0].value +'", "password":"' + event.target[1].value +'" }')
     let er = document.getElementById("error");
     let response = await fetch("/api/user/register", {
         method: "POST",

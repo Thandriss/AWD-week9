@@ -42,7 +42,6 @@ async function initializeCodeS() {
         })
         let data = await response.json();
         listItems = data.items;
-        console.log(listItems)
         itemArea.addEventListener('keydown', async function addItem(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -56,7 +55,6 @@ async function initializeCodeS() {
                 })
             }
         });
-        console.log(listItems)
         body.appendChild(button);
         body.appendChild(textEmail);
         body.appendChild(itemArea);
@@ -76,5 +74,6 @@ function logout() {
     // listItems=[];
     console.log("logout2")
     localStorage.removeItem("auth_token");
+    window.location.href ="/";
 }
 
